@@ -20,5 +20,6 @@ def test_multi():
 def test_div():
     assert div(6, 3) == 2
     assert div(-6, 2) == -3
+    #divide by zero test
     with pytest.raises(ValueError):
         div(5, 0)
