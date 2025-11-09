@@ -16,6 +16,7 @@ steps:
       pip install -r requirements.txt
     displayName: "Install dependencies"
 
-  - script: |
+  - script: | # set PYTHONPATH to include source directory and run pytest
+      export PYTHONPATH=$PYTHONPATH:$(Build.SourcesDirectory) 
       pytest
     displayName: "Run tests"
