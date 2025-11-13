@@ -1,0 +1,49 @@
+pr:
+  branches:
+    include:
+      - main
+      - development
+trigger:
+  branches:
+    include:
+      - development
+      - main
+
+pool:
+  vmImage: "ubuntu-latest"
+
+steps:
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: "3.12"
+
+  - script: | # install dependencies from requirements.txt file
+      python -m pip install --upgrade pip
+      pip install -r requirements.txt
+    displayName: "Install dependencies"
+
+  - script: | #run pylint on the app directory disabling specific warnings
+      pylint app --disable=missing-module-docstring,missing-function-docstring --fail-under=8.0
+    displayName: "Run Pylint"
+
+  - script: | # set PYTHONPATH to include source directory and run pytest
+      export PYTHONPATH=$PYTHONPATH:$(Build.SourcesDirectory)
+      pytest --junitxml=python-test-results.xml --cov=app --cov-report=xml --cov-fail-under=80
+    displayName: "Run tests with coverage"
+
+  - task: PublishTestResults@2 # publish test results
+    inputs:
+      testResultsFormat: "JUnit"
+      testResultsFiles: "**/python-test-results.xml"
+      testRunTitle: "Python testing"
+    condition: succeededOrFailed()
+    displayName: "Publish test results"
+
+  - task: PublishCodeCoverageResults@2 #publish code coverage results
+    inputs:
+      codeCoverageTool: "Cobertura"
+      summaryFileLocation: "coverage.xml"
+      reportDirectory: "$(System.DefaultWorkingDirectory)"
+      failIfCoverageEmpty: true
+    displayName: "Publish code coverage report"
+

@@ -11,5 +11,5 @@ def multi(a, b):
 
 def div(a, b):
     if b == 0:
-        raise ValueError('Cant divide by zero.')
+        raise ValueError('Cant divide by zero. Please enter a non zero number to divide by.')
     return a / b
