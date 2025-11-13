@@ -28,7 +28,7 @@ steps:
   - task: PublishTestResults@2 # publish test results
     inputs:
       testResultsFormat: "JUnit"
-      testResultsFiles: "**/test-results.xml"
+      testResultsFiles: "**/python-test-results.xml"
       testRunTitle: "Python testing"
     condition: succeededOrFailed()
     displayName: "Publish test results"
