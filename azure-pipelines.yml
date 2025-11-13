@@ -22,5 +22,13 @@ steps:
 
   - script: | # set PYTHONPATH to include source directory and run pytest
       export PYTHONPATH=$PYTHONPATH:$(Build.SourcesDirectory) 
-      pytest
+      pytest --junitxml=python-test-results.xml
     displayName: "Run tests"
+
+  - task: PublishTestResults@2 # publish test results
+    inputs:
+      testResultsFormat: "JUnit"
+      testResultsFiles: "**/test-results.xml"
+      testRunTitle: "Python testing"
+    condition: succeededOrFailed()
+    displayName: "Publish test results"
