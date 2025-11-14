@@ -26,8 +26,7 @@ steps:
       pylint app --disable=missing-module-docstring,missing-function-docstring --fail-under=8.0
     displayName: "Run Pylint"
 
-  - script: | # set PYTHONPATH to include source directory and run pytest
-      export PYTHONPATH=$PYTHONPATH:$(Build.SourcesDirectory)
+  - script: | # run pytest with coverage and generate reports
       pytest --junitxml=python-test-results.xml --cov=app --cov-report=xml --cov-fail-under=80
     displayName: "Run tests with coverage"
 
